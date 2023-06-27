@@ -1,27 +1,20 @@
-# Challenge 2: It's All About the Payload
+# Challenge 2: Account for and Count the Accounts
 
-Run the data generator to load the sample account, member and transaction data.
+Woodgrove Bank provided schemas for their member and account data so you and your team can generate sample data to load into the new Azure Cosmos DB account.
+
+In this challenge, you will run the data generator to load the sample account and member data.
 
 ## Challenge
 
 Your team must:
 
-1. TBD
-
-### Hints
-
-- TBD
+1. Complete the console application to generate sample data.
+2. Run the console application to generate and load the sample data into Cosmos DB.
+3. Verify that the data was successfully loaded.
 
 ### Success Criteria
 
 To complete this challenge successfully, you must:
 
-- TBD
-
-### Resources
-
-- Links to tool options
-
-## Explore Further
-
-Add some context to the challenge and technologies used.
+- Load all JSON data into the appropriate Cosmos DB containers.
+- Verify that the data was loaded into Cosmos DB.
