@@ -1,8 +1,8 @@
 # Challenge 4: Asking member questions
 
-In this task you add functionality behind the search area at the top of the member details screen that allows you to ask questions about a member's account and transactions using natural language and viewing the results.
+In this task you add functionality to the transactions screen that allows you to ask questions about a member's transactions using natural language and viewing the results.
 
-You will use the Microsoft Semantic Kernel with Azure OpenAI to create a SemanticFunction that will respond with the results of the users question. To accomplish this, examine the AskMemberQuestion function in the CorePayments.SemanticKernel project, which has some placeholder code for you to complete.
+You will use the Microsoft Semantic Kernel with Azure OpenAI to create a SemanticFunction that will respond with the results of the users question. 
 
 ## Challenge
 
