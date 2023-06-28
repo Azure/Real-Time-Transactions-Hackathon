@@ -18,6 +18,7 @@ Your team must:
 6. For a given account, view the account details.
 7. For a given account, view the transactions.
 8. For a given account, create credit and debit transactions.
+   1. Observe that the account document's `balance` property is automatically updated through a patch increment operation.
 9. Create a debit transaction that is greater than the account balance plus the overdraft limit.
 10. Start the `CorePayments.EventMonitor` console application to monitor the member patch operations, then update a member several times in a row to review the monitor output.
 
