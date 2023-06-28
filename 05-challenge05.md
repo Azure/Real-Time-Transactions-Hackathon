@@ -11,11 +11,12 @@ In this challenge you improve the the capabilities in two ways:
 
 Your team must:
 
-1. TBD
+1. Improve the SemanticFunction to use contextual knowledge that you provide it, and to improve the handling of numbers.
 
 ### Hints
 
-- Hint
+- Use system prompts to instruct the model to only answer questions about the context you provide.
+- Create a new class for handling numbers that contains a method for handling numbers. You make this a NativeFunction by adding the `SKFunction` attribute.
 
 ### Success Criteria
 
@@ -25,8 +26,6 @@ To complete this challenge successfully, you must:
 
 ### Resources
 
-- Link
-
-## Explore Further
-
-More info.
+- [Automatically orchestrate AI with planner](https://learn.microsoft.com/semantic-kernel/ai-orchestration/planner?tabs%253DCsharp)
+- [Semantic Kernel native functions](https://learn.microsoft.com/semantic-kernel/ai-orchestration/native-functions)
+- [Prompt engineering techniques](https://learn.microsoft.com/azure/cognitive-services/openai/concepts/advanced-prompt-engineering?pivots%253Dprogramming-language-chat-completions)
