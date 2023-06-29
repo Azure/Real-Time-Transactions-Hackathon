@@ -11,7 +11,7 @@ In this challenge you improve the the capabilities in two ways:
 
 Your team must:
 
-1. Improve the SemanticFunction to use contextual knowledge that you provide it, and to improve the handling of numbers.
+1. Improve the SemanticFunction to only use contextual knowledge that you provide it, and to improve the handling of numbers.
 
 ### Hints
 
@@ -22,7 +22,8 @@ Your team must:
 
 To complete this challenge successfully, you must:
 
-- Criteria
+- Demonstrate that the SemanticFunction only answers questions about the data context you provide and tells you when it doesn't have enough information to answer the question.
+- Ask questions that require numeric operations and demonstrate that the SequentialPlanner uses the NativeFunction to answer the question.
 
 ### Resources
 
