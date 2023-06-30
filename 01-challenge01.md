@@ -13,6 +13,7 @@ Your team must:
 
 ### Hints
 
+- Woodgrove Bank has provided you a script to deploy the foundation of your Azure environment. See the instructions in the README.md of the repo.
 - You will need to deploy the following Azure services:
   - Azure Cosmos DB NoSQL API (multi-master in 3 regions)
   - Azure OpenAI
@@ -24,7 +25,25 @@ Your team must:
 
 To complete this challenge successfully, you must:
 
+- Clone the repo with the starter artifacts and deployment scripts
 - Deploy the Azure services needed to support the payments app interface
+- Deploy Azure OpenAI with the following deployments:
+  - `completions-003` with the `text-davinci-003` model
+- Deploy an Azure Cosmos DB account with the following configurations:
+  - API: NoSQL
+  - Consistency: Bounded Staleness
+  - Geo-Redundancy: Enabled
+    - Deployed in the same 3 regions as the Azure Function Apps from the deployment script
+  - Multi-region writes: Enabled
+  - Analytical store: Disabled
+  - Autoscale: Enabled
+  - Provision throughput: 1000 RU/s
+  - Create a database named `payments`
+  - Create new containers named:
+    - `customerTransactions` with partition key `/accountId`
+    - `globalIndex` with partition key `/partitionKey`
+    - `members` with partition key `/memberId`
+    - `transactions` with partition key `/accountId`
 - Validate that the services are deployed and running
 
 ### Resources
