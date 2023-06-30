@@ -50,7 +50,7 @@ git clone https://github.com/...
 3. Run the following PowerShell script to provision the infrastructure and deploy the base set of required Azure services. Provide the name of a NEW resource group that will be created. This will provision the resource group, blob storage accounts, Event Hub, and a Synapse Workspace.
 
 ```pwsh
-./Unified-Deploy.ps1  -resourceGroup <resource-group-name> -subscription <subscription-id>
+./Starter-Deploy.ps1  -resourceGroup <resource-group-name> -subscription <subscription-id>
 ```
 
 ## Run the solution locally using Visual Studio
