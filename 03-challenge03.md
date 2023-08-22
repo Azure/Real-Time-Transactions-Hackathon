@@ -31,7 +31,7 @@ Your team must:
     az cosmosdb sql role assignment create --account-name YOUR_COSMOS_DB_ACCOUNT_NAME --resource-group YOUR_RESOURCE_GROUP_NAME --scope "/" --principal-id YOUR_AZURE_AD_PRINCIPAL_ID --role-definition-id 00000000-0000-0000-0000-000000000002
     ```
 
-- Event Hubs is also using RBAC. There is an Event Hubs-triggered function in the Function App that fires when adding claims through the `CoreClaims.Publisher` console app. You need to add yourself to the "Azure Event Hubs Data Owner" role via the Azure Cloud Shell or Azure CLI with the following:
+- Event Hubs is also using RBAC. The Member Repository sends an Event Hubs event when patching members. The `CorePayments.EventMonitor` monitor listens for Event Hub events and displays the output. For the events to work, you need to add yourself to the "Azure Event Hubs Data Owner" role via the Azure Cloud Shell or Azure CLI with the following:
 
     ```bash
     az role assignment create --assignee "YOUR_EMAIL_ADDRESS" --role "Azure Event Hubs Data Owner" --scope "/subscriptions/YOUR_AZURE_SUBSCRIPTION_ID/resourceGroups/YOUR_RESOURCE_GROUP_NAME/providers/Microsoft.EventHub/namespaces/YOUR_EVENT_HUBS_NAMESPACE"

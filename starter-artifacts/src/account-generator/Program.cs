@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Bogus.Distributions.Gaussian;
 using CorePayments.Infrastructure;
 using CorePayments.Infrastructure.Domain.Entities;
 using Microsoft.Azure.Cosmos;
@@ -166,10 +167,37 @@ namespace account_generator
                             .RuleFor(u => u.overdraftLimit, (f, u) => 5000)
                             .RuleFor(u => u.memberSince, (f, u) => f.Date.Past(20));
 
+                        var accountSummary = orderFaker.Generate();
+                        var memberSinceDate = accountSummary.memberSince.Date;
+                        var currentDate = DateTime.UtcNow;
+                        var isNegative = false;
+
+                        var transactionFaker = new Faker<Transaction>()
+                            .RuleFor(u => u.id, (f, u) => f.Random.Guid().ToString())
+                            .RuleFor(u => u.accountId, (f, u) => accountId)
+                            .RuleFor(u => u.amount, (f, u) =>
+                            {
+                                isNegative = f.Random.Bool(0.8f); // 80% chance of being negative
+                                var minAmount = isNegative ? -5000 : 5; // adjust the minimum value based on negativity
+                                var maxAmount = isNegative ? -5 : 5000; // adjust the maximum value based on negativity
+                                return Convert.ToDouble(f.Finance.Amount(minAmount, maxAmount, 2));
+                            })
+                            .RuleFor(u => u.type, (f, u) => isNegative ? "Debit" : "Credit")
+                            .RuleFor(u => u.description, (f, u) => f.Lorem.Sentence())
+                            .RuleFor(u => u.merchant, (f, u) => f.Company.CompanyName())
+                            .RuleFor(u => u.timestamp, (f, u) => f.Date.Between(memberSinceDate, currentDate));
+
+                        var transactions = transactionFaker.GenerateBetween(4, 8);
+
                         tasks.Add(
                             _pollyRetryPolicy.ExecuteAsync(async () =>
                                 {
-                                    await transactionsContainer.UpsertItemAsync(orderFaker.Generate(), new PartitionKey(accountId));
+                                    await transactionsContainer.UpsertItemAsync(accountSummary, new PartitionKey(accountId));
+
+                                    foreach (var transaction in transactions)
+                                    {
+                                        await transactionsContainer.UpsertItemAsync(transaction, new PartitionKey(accountId));
+                                    }
                                 }
                             ).ContinueWith(t =>
                             {
