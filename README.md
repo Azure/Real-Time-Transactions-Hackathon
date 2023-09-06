@@ -1,6 +1,6 @@
-# Azure Cosmos DB & OpenAI Reference Architecture: Payments & Accounts Hackathon
+# Azure Cosmos DB & Azure OpenAI Service Reference Architecture: Payments & Accounts Hackathon
 
-Woodgrove Bank is a global bank that has been in business for over 100 years. They have a large customer base and are looking to expand their business by offering new services to their customers. Members have accounts, each account with corresponding balances, overdraft limits and credit/debit transactions. They are looking to build a new application that will allow their customers to manage their accounts and better understand their bank transactions that contribute to their overall balance. They have decided to use Azure Cosmos DB and Azure OpenAI to build these new capabilities.
+Woodgrove Bank is a global bank that has been in business for over 100 years. They have a large customer base and are looking to expand their business by offering new services to their customers. Members have accounts, each account with corresponding balances, overdraft limits and credit/debit transactions. They are looking to build a new application that will allow their customers to manage their accounts and better understand their bank transactions that contribute to their overall balance. They have decided to use Azure Cosmos DB and Azure OpenAI Service to build these new capabilities.
 
 Woodgrove Bank wants to ride the wave of conversational AI to allow customers to interact with their bank accounts using natural language. They want to build a chatbot that will allow customers to ask questions about their accounts and transactions. They also want to build a secure architecture that provides high availability and scalability to support their global customer base. They are interested in how they can use high consistency across multiple regions, allowing customers to read and write to database endpoints in their local region, and make sure that the data is consistent across all regions. A pattern they want to explore is to separate read and write operations since the transaction data has a high rate of volume. They do not want to impact the performance of their database operations by introducing heavy reads against the same resource handling incoming write operations. They also want to make sure that if a region goes down, their customers within the impacted region can still access their accounts and make transactions.
 
@@ -13,7 +13,7 @@ In this hackathon, you will build a POC that does the following:
 ## Prerequisites
 
 - Azure Subscription
-- Subscription with access to the Azure OpenAI service. Start here to [Request Access to Azure OpenAI Service](https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR7en2Ais5pxKtso_Pz4b1_xUOFA5Qk1UWDRBMjg0WFhPMkIzTzhKQ1dWNyQlQCN0PWcu)
+- Subscription with access to the Azure OpenAI Service. Start here to [Request Access to Azure OpenAI Service](https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR7en2Ais5pxKtso_Pz4b1_xUOFA5Qk1UWDRBMjg0WFhPMkIzTzhKQ1dWNyQlQCN0PWcu)
 
 ### Prerequisites for running/debugging locally
 
@@ -115,7 +115,7 @@ You can run the website and the REST API provided by the Azure Function App that
 
 To run locally and debug using Visual Studio, open the solution file to load the projects and prepare for debugging.
 
-Before you can start debugging the Function App, make sure the newly created `local.settings.json` file is copied to the output directory. To do this, right-click on the file in the Solution Explorer and select `Properties`. In the properties window, set the `Copy to Output Directory` property to `Copy always`..
+Before you can start debugging the Azure Function App, make sure the newly created `local.settings.json` file is copied to the output directory. To do this, right-click on the file in the Solution Explorer and select `Properties`. In the properties window, set the `Copy to Output Directory` property to `Copy always`..
 
 You are now ready to start debugging the solution locally. To do this, press `F5` or select `Debug > Start Debugging` from the menu.
 
