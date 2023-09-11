@@ -1,7 +1,7 @@
 # Azure Cosmos DB & Azure OpenAI Service Reference Architecture: Payments & Accounts Hackathon
 
-> **NOTICE: REPO MOVED**
-> This repo has moved to its new location here: <https://github.com/Azure/Real-Time-Transactions-Hackathon>
+# **NOTICE: REPO MOVED**
+## This repo has moved to its new location here: <https://github.com/Azure/Real-Time-Transactions-Hackathon>
 
 Woodgrove Bank is a global bank that has been in business for over 100 years. They have a large customer base and are looking to expand their business by offering new services to their customers. Members have accounts, each account with corresponding balances, overdraft limits and credit/debit transactions. They are looking to build a new application that will allow their customers to manage their accounts and better understand their bank transactions that contribute to their overall balance. They have decided to use Azure Cosmos DB and Azure OpenAI Service to build these new capabilities.
 
