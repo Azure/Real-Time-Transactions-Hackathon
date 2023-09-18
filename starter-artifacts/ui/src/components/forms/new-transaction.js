@@ -4,7 +4,7 @@ import { Button, Label, Spinner, Textarea, TextInput } from 'flowbite-react';
 import useAddTransaction from '~/hooks/add-transaction';
 import { useQueryClient } from 'react-query';
 
-const NewTransactionForm = ({ accountId, setOpenModal }) => {
+const NewTransactionForm = ({ accountId, setOpenModal, setSubmittedData }) => {
   const { mutate } = useAddTransaction();
   const client = useQueryClient();
 
@@ -28,6 +28,7 @@ const NewTransactionForm = ({ accountId, setOpenModal }) => {
     setError('');
     mutate(form, {
       onSuccess: async () => {
+        setSubmittedData(form);
         setOpenModal(false);
         setIsLoading(false);
         setForm({ accountId, type: 'Credit', description: '', merchant: '', amount: '' });
@@ -42,7 +43,7 @@ const NewTransactionForm = ({ accountId, setOpenModal }) => {
 
   const onChangeMerchant = (e) => setForm({ ...form, merchant: e.target.value });
   const onChangeType = (e) => setForm({ ...form, type: e.target.value });
-  const onChangeAmount = (e) => setForm({ ...form, amount: e.target.value });
+  const onChangeAmount = (e) => setForm({ ...form, amount: Math.abs(e.target.value) });
   const onChangeDescription = (e) => setForm({ ...form, description: e.target.value });
 
   useEffect(() => {
@@ -67,9 +68,9 @@ const NewTransactionForm = ({ accountId, setOpenModal }) => {
         <div className="mb-2 block">
           <Label htmlFor="type" value="Transaction Type:" />
         </div>
-        <select onChange={onChangeType} label="Select" id="type" required>
-          <option>Credit</option>
-          <option>Debit</option>
+        <select onChange={onChangeType} label="Select" id="type" required value={form.type}>
+          <option value="Credit">Credit</option>
+          <option value="Debit">Debit</option>
         </select>
       </div>
       <div className="mb-4">
@@ -83,6 +84,8 @@ const NewTransactionForm = ({ accountId, setOpenModal }) => {
           placeholder="Amount"
           required
           value={form.amount}
+          step="0.01"
+          min="0.01"
         />
       </div>
       <div className="mb-4">
