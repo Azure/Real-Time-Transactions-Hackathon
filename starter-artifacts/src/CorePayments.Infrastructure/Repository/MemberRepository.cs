@@ -1,6 +1,8 @@
 ﻿using CorePayments.Infrastructure.Domain.Entities;
+using CorePayments.Infrastructure.Domain.Settings;
 using CorePayments.Infrastructure.Events;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System.Drawing.Printing;
 
@@ -8,8 +10,8 @@ namespace CorePayments.Infrastructure.Repository
 {
     public class MemberRepository : CosmosDbRepository, IMemberRepository
     {
-        public MemberRepository(CosmosClient client, IEventHubService eventHub) :
-            base(client, containerName: Environment.GetEnvironmentVariable("memberContainer") ?? string.Empty, eventHub)
+        public MemberRepository(CosmosClient client, IOptions<DatabaseSettings> options) :
+            base(client, containerName: options.Value.MemberContainer ?? string.Empty, options)
         {
         }
 
@@ -23,6 +25,19 @@ namespace CorePayments.Infrastructure.Repository
             QueryDefinition query = new QueryDefinition("select * from c order by c.lastName desc");
 
             return await PagedQuery<Member>(query, pageSize, null, continuationToken);
+        }
+
+        public async Task<Member?> GetMember(string memberId)
+        {
+            var result = await ReadItem<Member?>(memberId, memberId);
+            if (result != null)
+            {
+                return result;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<int> PatchMember(Member member, string memberId)
@@ -51,12 +66,6 @@ namespace CorePayments.Infrastructure.Repository
                 return 0;
 
             var response = await Container.PatchItemAsync<Member>(memberId, new PartitionKey(memberId), ops);
-            var paths = string.Join(", ", ops.Select(x => x.Path));
-            // TODO: Uncomment the following line and complete the code to get the contacted regions from the response.
-            //var regions = string.Join(", ", response.______._______().Select(x => x.regionName));
-
-            // TODO: Uncomment the following line and complete the code to trigger the tracking event.
-            //await TriggerTrackingEvent($"Performing member patch operations (paths: {paths}) within the {regions} region(s).");
 
             return ops.Count;
         }
