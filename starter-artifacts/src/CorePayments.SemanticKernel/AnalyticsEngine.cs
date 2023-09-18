@@ -20,12 +20,12 @@ namespace CorePayments.SemanticKernel
 
         public async Task<string> ReviewTransactions(IEnumerable<Transaction> transactions, string query)
         {
-          /* TODO: Challenge 4.
+            /* TODO: Challenge 4.
              * Uncomment and complete the following lines as instructed.
              */
             // TODO: Uncomment the code below and instantiate a new KernelBuilder.
             //var builder = __________;
-            // builder.WithAzureTextCompletionService(
+            // builder.WithAzureChatCompletionService(
             //          _settings.OpenAICompletionsDeployment,
             //          _settings.OpenAIEndpoint,
             //          _settings.OpenAIKey);
@@ -99,7 +99,17 @@ namespace CorePayments.SemanticKernel
                 ReadCommentHandling = JsonCommentHandling.Skip,
             };
 
-            string transactionData = JsonSerializer.Serialize(transactions, ser_options);
+            // Optimize the transaction data we send as context to the semantic function.
+            var contextData = transactions.Select(t => new
+            {
+                t.description,
+                t.merchant,
+                t.type,
+                t.amount,
+                t.timestamp
+            });
+
+            var transactionData = JsonSerializer.Serialize(contextData, ser_options);
 
             // TODO: Uncomment the below three lines to create a new context from the kernel and set the
             //       transaction context to your transaction data and the query context to your user query.

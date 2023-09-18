@@ -1,5 +1,7 @@
-﻿using CorePayments.Infrastructure.Events;
+﻿using CorePayments.Infrastructure.Domain.Settings;
+using CorePayments.Infrastructure.Events;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Bson;
 using System.Drawing.Printing;
 using System.Net;
@@ -10,20 +12,16 @@ namespace CorePayments.Infrastructure.Repository
     {
         private readonly CosmosClient _client;
         private readonly Database _database;
-        private readonly IEventHubService _eventHub;
 
         protected Container Container { get; }
-        protected string CurrentWriteRegion { get; }
-        protected string CurrentReadRegion { get; }
 
-        public CosmosDbRepository(CosmosClient client, string containerName, IEventHubService eventHub)
+        public CosmosDbRepository(CosmosClient client, string containerName, IOptions<DatabaseSettings> options)
         {
             if (string.IsNullOrWhiteSpace(containerName))
                 throw new ArgumentNullException(nameof(containerName));
 
             _client = client;
-            _database = _client.GetDatabase(Environment.GetEnvironmentVariable("paymentsDatabase"));
-            _eventHub = eventHub;
+            _database = _client.GetDatabase(options.Value.PaymentsDatabase);
 
             Container = _database.GetContainer(containerName);
             
@@ -81,7 +79,7 @@ namespace CorePayments.Infrastructure.Repository
 
         }
 
-        protected async Task<ItemResponse<TEntity>> ReadItem<TEntity>(string partitionKey, string itemId) where TEntity : new()
+        protected async Task<ItemResponse<TEntity>?> ReadItem<TEntity>(string partitionKey, string itemId) where TEntity : new()
         {
             try
             {
@@ -96,11 +94,6 @@ namespace CorePayments.Infrastructure.Repository
 
                 throw;
             }
-        }
-
-        protected async Task TriggerTrackingEvent<T>(T eventPayload)
-        {
-            await _eventHub.TriggerTrackingEvent<T>(eventPayload);
         }
     }
 }
