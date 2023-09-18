@@ -13,13 +13,14 @@ In this hackathon, you will build a POC that does the following:
 ## Prerequisites
 
 - Azure Subscription
-- Subscription with access to the Azure OpenAI service. Start here to [Request Access to Azure OpenAI Service](https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR7en2Ais5pxKtso_Pz4b1_xUOFA5Qk1UWDRBMjg0WFhPMkIzTzhKQ1dWNyQlQCN0PWcu)
+- Subscription access to Azure OpenAI service. Start here to [Request Access to Azure OpenAI Service](https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR7en2Ais5pxKtso_Pz4b1_xUOFA5Qk1UWDRBMjg0WFhPMkIzTzhKQ1dWNyQlQCN0PWcu)
 
-### Prerequisites for running/debugging locally
-
-- Backend (Function App, Console Apps, etc.)
-  - Visual Studio Code or Visual Studio 2022
+- Backend (Web API, Worker Service, Console Apps, etc.)
+  - Visual Studio 2022 17.6 or later (required for passthrough Visual Studio authentication for the Docker container)
   - .NET 7 SDK
+  - Docker Desktop (with WSL for Windows machines)
+  - Azure CLI ([v2.49.0 or greater](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli))
+  - [Helm 3.11.1 or greater](https://helm.sh/docs/intro/install/)
 - Frontend (React web app)
   - Visual Studio Code
   - Ensure you have the latest version of NPM and node.js:
@@ -35,65 +36,54 @@ To start the React web app:
 3. Run npm run dev
 4. Open localhost:3000 in a web browser
 
-### Clone this repo
+## Deployment
 
-Clone this repository:
+Check the [Deployment](./docs/deployment.md) page for instructions on how to deploy the solution to your Azure subscription.
 
-```pwsh
-git clone https://github.com/...
-```
-
-### Deploy to Azure the core services
-
-1. Open the PowerShell command line and navigate to the directory where you cloned the repo.
-2. Navigate into the `starter-artifacts\deploy\powershell` folder.
-3. Run the following PowerShell script to provision the infrastructure and deploy the base set of required Azure services. Provide the name of a NEW resource group that will be created. This will provision the resource group, blob storage accounts, Event Hub, and a Synapse Workspace.
-
-```pwsh
-./Starter-Deploy.ps1  -resourceGroup <resource-group-name> -subscription <subscription-id>
-```
+Once your deployment is complete, you can proceed to the [Quickstart](#quickstart) section.
 
 ## Run the solution locally using Visual Studio
 
-You can run the website and the REST API provided by the Azure Function App that supports it locally. You need to first update your local configuration and then you can run the solution in the debugger using Visual Studio.
+You can run the website and the REST API provided by the Web API that supports it locally. You need to first update your local configuration, and then you can run the solution in the debugger using Visual Studio.
 
 #### Configure local settings
 
-- In the `CorePayments.FunctionApp` project, copy the `local.settings.template.json` file and name it `local.settings.json`. This file should like similar to this (make sure you replace the `{{---}}` and other placeholders with your deployed resource names):
+> **Note:** Only complete these steps if you did not deploy the solution to Azure using the deployment guide. The deployment scripts create the `appsettings.Development.json` files for you. If these files do not exist for some reason, you can follow these steps to create them.
+
+- In the `CorePayments.WebAPI` project, copy the `appsettings.Development.template.json` file and name it `appsettings.Development.json`. This file should like similar to this (make sure you replace the `{{---}}` and other placeholders with your deployed resource names):
 
     ```json
     {
-        "IsEncrypted": false,
-        "Values": {
-        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-        "CosmosDBConnection__accountEndpoint": "{{cosmosEndpoint}}",
-        "EventHubConnection__fullyQualifiedNamespace": "{{eventHubEndpoint}}",
-        "customerContainer": "customerTransactions",
-        "globalIndexContainer": "globalIndex",
-        "isMasterRegion": "True",
-        "memberContainer": "members",
-        "paymentsDatabase": "payments",
-        "preferredRegions": "East US",
-        "transactionsContainer": "transactions"
+        "Logging": {
+          "LogLevel": {
+            "Default": "Information",
+            "Microsoft.AspNetCore": "Warning"
+          }
         },
-        "Host": {
-        "LocalHttpPort": 7071,
-        "CORS": "*"
+        "CosmosDBConnection:accountEndpoint": "{{cosmosEndpoint}}",
+        "DatabaseSettings": {
+          "CustomerContainer": "customerTransactions",
+          "GlobalIndexContainer": "globalIndex",
+          "IsMasterRegion": "True",
+          "MemberContainer": "members",
+          "PaymentsDatabase": "payments",
+          "PreferredRegions": "East US",
+          "TransactionsContainer": "transactions"
         },
+        "AllowedHosts": "*",
         "AnalyticsEngine": {
-        "OpenAIEndpoint": "{{openAiEndpoint}}",
-        "OpenAIKey": "{{openAiKey}}",
-        "OpenAICompletionsDeployment": "{{openAiDeployment}}"
+          "OpenAIEndpoint": "{{openAiEndpoint}}",
+          "OpenAIKey": "{{openAiKey}}",
+          "OpenAICompletionsDeployment": "completions"
         }
     }
     ```
 
-- In the `CorePayments.EventMonitor` project, copy `local.settings.template.json` to a new file named `local.settings.json` and make sure it looks similar to this:
+- In the `CoreClaims.WorkerService` project, copy the `appsettings.Development.template.json` file and name it `appsettings.Development.json`. This file should like similar to this (make sure you replace the `{{---}}` and other placeholders with your deployed resource names):
 
     ```json
     {
-      "EventHubConnection__fullyQualifiedNamespace": "{{eventHubEndpoint}}"
+      "CosmosDBConnection:accountEndpoint": "{{cosmosEndpoint}}"
     }
     ```
 
@@ -115,11 +105,11 @@ You can run the website and the REST API provided by the Azure Function App that
 
 To run locally and debug using Visual Studio, open the solution file to load the projects and prepare for debugging.
 
-Before you can start debugging the Function App, make sure the newly created `local.settings.json` file is copied to the output directory. To do this, right-click on the file in the Solution Explorer and select `Properties`. In the properties window, set the `Copy to Output Directory` property to `Copy always`..
+Before you can start debugging the `CorePayments.WebAPI` and `CorePayments.WorkerService` projects, make sure the newly created `appsettings.Development.json` files are copied to the output directory in each project. To do this, right-click on the file in the Solution Explorer and select `Properties`. In the properties window, set the `Copy to Output Directory` property to `Copy always`..
 
-You are now ready to start debugging the solution locally. To do this, press `F5` or select `Debug > Start Debugging` from the menu.
+You are now ready to start debugging the solution locally. To do this, you first need to set up multiple startup projects to run when you debug. Right-click the solution in Solution Explorer, then select **Configure Startup Projects...**. Set `CorePayments.WorkerService` and `CorePayments.WebAPI` to **Start** under Action. All others should be set to None. When you're ready to debug, press `F5` or select `Debug > Start Debugging` from the menu.
 
-**NOTE**: With Visual Studio, you can also use alternate ways to manage the secrets and configuration. For example, you can use the `Manage User Secrets` option from the context menu of the `CorePayments.FunctionApp` project to open the `secrets.json` file and add the configuration values there.
+**NOTE**: With Visual Studio, you can also use alternate ways to manage the secrets and configuration. For example, you can use the `Manage User Secrets` option from the context menu of the `CorePayments.WebAPI` and `CorePayments.WorkerService` projects to open the `secrets.json` file and add the configuration values there.
 
 ## Teardown
 

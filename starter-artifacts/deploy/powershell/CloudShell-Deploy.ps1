@@ -3,16 +3,13 @@
 Param(
     [parameter(Mandatory=$true)][string]$resourceGroup,
     [parameter(Mandatory=$false)][string]$locations="SouthCentralUS,NorthCentralUS,EastUS",
-    [parameter(Mandatory=$false)][string]$openAiLocation="EastUS",
     [parameter(Mandatory=$true)][string]$subscription,
     [parameter(Mandatory=$false)][string]$template="main.bicep",
     [parameter(Mandatory=$false)][string]$suffix=$null,
     [parameter(Mandatory=$false)][bool]$stepDeployBicep=$true,
     [parameter(Mandatory=$false)][bool]$stepDeployFD=$true,
-    [parameter(Mandatory=$false)][bool]$stepBuildPush=$true,
     [parameter(Mandatory=$false)][bool]$stepDeployImages=$true,
-    [parameter(Mandatory=$false)][bool]$stepPublishSite=$true,
-    [parameter(Mandatory=$false)][bool]$stepLoginAzure=$true
+    [parameter(Mandatory=$false)][bool]$stepPublishSite=$true
 )
 
 az extension add --name  application-insights
@@ -20,9 +17,6 @@ az extension update --name  application-insights
 
 az extension add --name storage-preview
 az extension update --name storage-preview
-
-winget install --id=Kubernetes.kubectl  -e --accept-package-agreements --accept-source-agreements --silent
-winget install --id=Microsoft.Azure.Kubelogin  -e --accept-package-agreements --accept-source-agreements --silent
 
 $gValuesFile="configFile"
 
@@ -37,10 +31,6 @@ if (-not $suffix) {
 }
 
 Write-Host "Resource suffix is $suffix" -ForegroundColor Yellow
-
-if ($stepLoginAzure) {
-    az login
-}
 
 az account set --subscription $subscription
 
@@ -69,19 +59,6 @@ $gValuesLocation=$(./Join-Path-Recursively.ps1 -pathParts ..,..,__values,$gValue
 if ($stepDeployFD)
 {
     & ./Deploy-FDOrigins.ps1 -resourceGroup $resourceGroup -locations $locations
-}
-
-# Create Secrets
-if ([string]::IsNullOrEmpty($acrName))
-{
-    $acrName = $(az acr list --resource-group $resourceGroup -o json | ConvertFrom-Json).name
-}
-
-Write-Host "The Name of your ACR: $acrName" -ForegroundColor Yellow
-
-if ($stepBuildPush) {
-    # Build an Push
-    & ./BuildPush.ps1 -resourceGroup $resourceGroup -locations $locations
 }
 
 if ($stepDeployImages) {
