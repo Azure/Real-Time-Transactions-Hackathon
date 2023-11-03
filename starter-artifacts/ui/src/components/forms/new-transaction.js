@@ -4,7 +4,7 @@ import { Button, Label, Spinner, Textarea, TextInput } from 'flowbite-react';
 import useAddTransaction from '~/hooks/add-transaction';
 import { useQueryClient } from 'react-query';
 
-const NewTransactionForm = ({ accountId, setOpenModal, setSubmittedData }) => {
+const NewTransactionForm = ({ accountId, setOpenModal, setNewTransaction }) => {
   const { mutate } = useAddTransaction();
   const client = useQueryClient();
 
@@ -28,11 +28,14 @@ const NewTransactionForm = ({ accountId, setOpenModal, setSubmittedData }) => {
     setError('');
     mutate(form, {
       onSuccess: async () => {
-        setSubmittedData(form);
-        setOpenModal(false);
-        setIsLoading(false);
-        setForm({ accountId, type: 'Credit', description: '', merchant: '', amount: '' });
-        setError('');
+        const serverSyncDelayMS = 6500;
+        setTimeout(() => {
+          setNewTransaction(form);
+          setOpenModal(false);
+          setIsLoading(false);
+          setForm({ accountId, type: 'Credit', description: '', merchant: '', amount: '' });
+          setError('');
+        }, serverSyncDelayMS);
       },
       onError: (e) => {
         setError(e?.response?.data ?? 'There was an error creating the transaction');
@@ -103,7 +106,7 @@ const NewTransactionForm = ({ accountId, setOpenModal, setSubmittedData }) => {
       <p className="text-red-500">{error}</p>
       <div className="w-full flex justify-between pt-4">
         <Button color="light" onClick={onClickCancel}>
-          Cancel
+          Close
         </Button>
         <Button color="dark" onClick={onSubmit}>
           {isLoading ? <Spinner color="white" size="md" /> : 'Save'}
