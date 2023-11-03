@@ -4,7 +4,7 @@ _...or at least the members, accounts, and transaction data._
 
 Now that the data is loaded, it's time to visualize and interact with it. In this challenge you and your team wire up the Members, Account Summary, and Transaction Statement functionality to load the data from Cosmos DB and present it in the UI. This gives you the chance to become familiar with core of the application by seeing the end-to-end in action.
 
-Since the Azure Cosmos DB account is multi-master across several regions, and the web traffic is routed to random regions by Azure Front Door, you can experience a feature of Cosmos DB called _multi-master_ replication. This means that you can write to any region and the data will be replicated to all other regions. This is a great feature for global applications that need to be highly available and scalable. However, one challenge that can arise is that there may be conflicts when updating the same document in different regions at the same time or within a brief period of time. The Azure Cosmos DB SDK provides a `PatchItem`/`PatchItemAsync` feature that allows you to update a portion of a document without having to retrieve it first. This feature also automatically manages merging patch operations that occur at the same time in different write regions. You will explore this capability within this challenge.
+Since the Azure Cosmos DB account supports several regions, and the web traffic is routed to random regions by Azure Front Door, you can experience replication of data in Cosmos DB across the regions. This means that you can write to any region and the data will be replicated to all other regions. This is a great feature for global applications that need to be highly available and scalable. However, one challenge that can arise is that there may be conflicts when updating the same document in different regions at the same time or within a brief period of time. The Azure Cosmos DB SDK provides a `PatchItem`/`PatchItemAsync` feature that allows you to update a portion of a document without having to retrieve it first. This feature also automatically manages merging patch operations that occur at the same time in different write regions. You will explore this capability within this challenge.
 
 ## Challenge
 
@@ -31,7 +31,7 @@ Your team must:
     az cosmosdb sql role assignment create --account-name YOUR_COSMOS_DB_ACCOUNT_NAME --resource-group YOUR_RESOURCE_GROUP_NAME --scope "/" --principal-id YOUR_AZURE_AD_PRINCIPAL_ID --role-definition-id 00000000-0000-0000-0000-000000000002
     ```
 
-- Event Hubs is also using RBAC. There is an Event Hubs-triggered function in the Function App that fires when adding claims through the `CoreClaims.Publisher` console app. You need to add yourself to the "Azure Event Hubs Data Owner" role via the Azure Cloud Shell or Azure CLI with the following:
+- Event Hubs is also using RBAC. The Member Repository sends an Event Hubs event when patching members. The `CorePayments.EventMonitor` monitor listens for Event Hub events and displays the output. For the events to work, you need to add yourself to the "Azure Event Hubs Data Owner" role via the Azure Cloud Shell or Azure CLI with the following:
 
     ```bash
     az role assignment create --assignee "YOUR_EMAIL_ADDRESS" --role "Azure Event Hubs Data Owner" --scope "/subscriptions/YOUR_AZURE_SUBSCRIPTION_ID/resourceGroups/YOUR_RESOURCE_GROUP_NAME/providers/Microsoft.EventHub/namespaces/YOUR_EVENT_HUBS_NAMESPACE"

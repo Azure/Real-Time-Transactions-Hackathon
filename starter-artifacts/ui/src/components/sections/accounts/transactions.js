@@ -14,6 +14,7 @@ const TransactionsSection = ({ accountId }) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isAnalyzeModalOpen, setIsAnalyzeModalOpen] = useState(false);
+  const [submittedData, setSubmittedData] = useState({});
 
   const onClickAdd = () => setIsOpenModal(true);
   const onClickAnalyze = () => setIsAnalyzeModalOpen(true);
@@ -88,7 +89,7 @@ const TransactionsSection = ({ accountId }) => {
       </div>
 
       <FormModal header={modalHeader} openModal={isOpenModal} setOpenModal={setIsOpenModal}>
-        <NewTransactionForm accountId={accountId} setOpenModal={setIsOpenModal} />
+        <NewTransactionForm accountId={accountId} setOpenModal={setIsOpenModal} setSubmittedData={setSubmittedData} />
       </FormModal>
     </div>
   );

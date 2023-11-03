@@ -15,10 +15,10 @@ Your team must:
 
 - Woodgrove Bank has provided you a script to deploy the foundation of your Azure environment. See the instructions in the README.md of the repo.
 - You will need to deploy the following Azure services:
-  - Azure Cosmos DB NoSQL API (multi-master in 3 regions)
+  - Azure Cosmos DB NoSQL API (1 read/write and 2 read regions)
   - Azure OpenAI
-  - Azure Function App Consumption Plan (deployed in 3 regions)
-  - Azure Front Door that evenly load balances traffic across the 3 regions to the Azure Function Apps
+  - Azure Kubernetes Service (AKS) (deployed in 3 regions)
+  - Azure Front Door that evenly load balances traffic across the 3 regions to the Web API
   - Azure Blob Storage account for hosting a static web app
 
 ### Success Criteria
@@ -28,13 +28,13 @@ To complete this challenge successfully, you must:
 - Clone the repo with the starter artifacts and deployment scripts
 - Deploy the Azure services needed to support the payments app interface
 - Deploy Azure OpenAI with the following deployments:
-  - `completions-003` with the `text-davinci-003` model
+  - `completions` with the `gpt-35-turbo` model
 - Deploy an Azure Cosmos DB account with the following configurations:
   - API: NoSQL
   - Consistency: Bounded Staleness
   - Geo-Redundancy: Enabled
-    - Deployed in the same 3 regions as the Azure Function Apps from the deployment script
-  - Multi-region writes: Enabled
+    - Deployed in the same 3 regions as AKS from the deployment script
+  - Multi-region writes: Disabled
   - Analytical store: Disabled
   - Autoscale: Enabled
   - Provision throughput: 1000 RU/s

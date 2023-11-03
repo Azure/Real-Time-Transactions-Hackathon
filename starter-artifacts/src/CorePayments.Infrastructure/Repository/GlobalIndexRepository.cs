@@ -1,14 +1,16 @@
 ﻿using CorePayments.Infrastructure.Domain.Entities;
+using CorePayments.Infrastructure.Domain.Settings;
 using CorePayments.Infrastructure.Events;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Options;
 using static CorePayments.Infrastructure.Constants;
 
 namespace CorePayments.Infrastructure.Repository
 {
     public class GlobalIndexRepository : CosmosDbRepository, IGlobalIndexRepository
     {
-        public GlobalIndexRepository(CosmosClient client, IEventHubService eventHub) :
-            base(client, containerName: Environment.GetEnvironmentVariable("globalIndexContainer") ?? string.Empty, eventHub)
+        public GlobalIndexRepository(CosmosClient client, IOptions<DatabaseSettings> options) :
+            base(client, containerName: options.Value.GlobalIndexContainer ?? string.Empty, options)
         {
         }
 
@@ -58,6 +60,20 @@ namespace CorePayments.Infrastructure.Repository
                 await Container.DeleteItemAsync<GlobalIndex>(globalIndexAccountMemberToDelete.id,
                     new PartitionKey(globalIndexAccountMemberToDelete.partitionKey));
             }
+        }
+
+        public async Task<IEnumerable<GlobalIndex>> GetAccountsForMember(string memberId)
+        {
+            QueryDefinition query = new QueryDefinition("select * from c where c.partitionKey = @memberId and c.targetDocType = @docType order by c.id")
+                .WithParameter("@memberId", memberId)
+                .WithParameter("@docType", Constants.DocumentTypes.AccountSummary);
+
+            return await Query<GlobalIndex>(query);
+        }
+
+        public async Task CreateItem(GlobalIndex globalIndex)
+        {
+            await Container.CreateItemAsync(globalIndex, new PartitionKey(globalIndex.partitionKey));
         }
     }
 }
