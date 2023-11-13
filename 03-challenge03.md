@@ -46,8 +46,8 @@ Your team must:
 To complete this challenge successfully, you must:
 
 - Complete all of the code in the solution that is marked with `TODO: Challenge 3` comments.
-- Add a rule to the Function App code to throw an exception if the transaction amount is greater than the account balance plus the overdraft limit. The response should be a 400 Bad Request with a message, such as "Insufficient balance to process transaction."
-- Configure the application to connect to the REST API supplied by the Azure Function App.
+- Add a rule to the Web API code to throw an exception if the transaction amount is greater than the account balance plus the overdraft limit. The response should be a 400 Bad Request with a message, such as "Insufficient balance to process transaction."
+- Configure the application to connect to the REST API supplied by the Web API.
 - Explore the data within the application, as described above.
 - Create a new member, edit a member, and create credit and debit transactions.
 - Verify that the application throws an exception when you create a debit transaction that is greater than the account balance plus the overdraft limit.

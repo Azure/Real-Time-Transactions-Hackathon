@@ -36,12 +36,6 @@ To start the React web app:
 3. Run npm run dev
 4. Open localhost:3000 in a web browser
 
-## Deployment
-
-Check the [Deployment](./docs/deployment.md) page for instructions on how to deploy the solution to your Azure subscription.
-
-Once your deployment is complete, you can proceed to the [Quickstart](#quickstart) section.
-
 ## Run the solution locally using Visual Studio
 
 You can run the website and the REST API provided by the Web API that supports it locally. You need to first update your local configuration, and then you can run the solution in the debugger using Visual Studio.

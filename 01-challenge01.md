@@ -51,4 +51,5 @@ To complete this challenge successfully, you must:
 - [Azure Cosmos DB](https://learn.microsoft.com/azure/cosmos-db/)
 - [Host a static website on Blob Storage](https://learn.microsoft.com/azure/storage/blobs/storage-blob-static-website-host)
 - [Azure OpenAI](https://learn.microsoft.com/azure/cognitive-services/openai/overview)
-- [Azure Functions](https://learn.microsoft.com/azure/azure-functions/functions-overview)
+- [Azure Container Apps](https://learn.microsoft.com/azure/container-apps/overview)
+- [Azure Kubernetes Service](https://learn.microsoft.com/azure/aks/intro-kubernetes)
