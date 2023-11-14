@@ -16,20 +16,29 @@ namespace CorePayments.Infrastructure.Repository
 
         public async Task ProcessAccountAssignment(AccountAssignmentOperations operation, string memberId, string accountId)
         {
+            /* TODO: Challenge 3.
+            * Uncomment and complete the following lines as instructed.
+            */
             if (operation == AccountAssignmentOperations.Add)
             {
                 // Create the global index document for the Member Account record:
                 var globalIndexMemberAccount = new GlobalIndex
                 {
-                    id = accountId,
-                    partitionKey = memberId,
+                    // TODO: Uncomment and complete the following lines to set the id and partitionKey property values.
+                    // Remember, we are creating a relationship between an Account and a Member. Pay attention to the
+                    // targetDocType set below as a hint for the id value. The partitionKey value should be for the Member.
+                    //id = <SET THE ID VALUE>,
+                    //partitionKey = <SET THE PARTITION KEY VALUE>,
                     targetDocType = DocumentTypes.AccountSummary
                 };
                 // Create the global index document for the Account Member record:
                 var globalIndexAccountMember = new GlobalIndex
                 {
-                    id = memberId,
-                    partitionKey = accountId,
+                    // TODO: Uncomment and complete the following lines to set the id and partitionKey property values.
+                    // Remember, we are creating a relationship between a Member and an Account. Pay attention to the
+                    // targetDocType set below as a hint for the id value. The partitionKey value should be for the Member.
+                    //id = <SET THE ID VALUE>,
+                    //partitionKey = <SET THE PARTITION KEY VALUE>,
                     targetDocType = DocumentTypes.Member
                 };
 
@@ -64,11 +73,17 @@ namespace CorePayments.Infrastructure.Repository
 
         public async Task<IEnumerable<GlobalIndex>> GetAccountsForMember(string memberId)
         {
-            QueryDefinition query = new QueryDefinition("select * from c where c.partitionKey = @memberId and c.targetDocType = @docType order by c.id")
-                .WithParameter("@memberId", memberId)
-                .WithParameter("@docType", Constants.DocumentTypes.AccountSummary);
-
-            return await Query<GlobalIndex>(query);
+            /* TODO: Challenge 3.
+            * Uncomment and complete the following lines as instructed.
+            */
+            // TODO: Uncomment and complete the following lines to create a query to retrieve the global index documents.
+            // HINT: You will need to set the docType value to be an account summary.
+            //QueryDefinition query = new QueryDefinition("select * from c where <COMPLETE THE QUERY>")
+                //.WithParameter("@memberId", <SET THE MEMBER ID VALUE>)
+                //.WithParameter("@docType", <SET THE DOC TYPE VALUE>);
+            //return await Query<GlobalIndex>(query);
+            // TODO: Comment out or delete the below line after completing the above.
+            return new List<GlobalIndex>();
         }
 
         public async Task CreateItem(GlobalIndex globalIndex)
